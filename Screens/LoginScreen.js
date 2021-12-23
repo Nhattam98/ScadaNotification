@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Background from '../Screens/Image/Background.jpg';
 import Logo from '../Screens/Image/logo.png';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { MaterialIcons } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
+import firebase from "firebase/compat/app";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
     StyleSheet,
     View,
@@ -33,11 +35,38 @@ function LoginScreen({ navigation }) {
     const [show, setShow] = useState(false)
     const HandleEyeClick = () => {
         setShow(!show);
-    }
+    };
+    useEffect(() => {
+        const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
+            if (user) {
+                navigation.navigate("Main");
+                user.getIdToken().then((idToken) => {
+                    firebase
+                        .firestore()
+                        .collection("onlineUsers")
+                        .doc(firebase.auth().currentUser?.email)
+                        .set({
+                            email: user.email,
+                        });
+                    return idToken;
+                });
+            }
+        });
+        return unsubscribe;
+    }, []);
+
     const HandleOnLogin = () => {
         console.log("Log in Clicked!!!")
-        navigation.navigate("Main")
-    }
+        const auth = firebase.auth();
+        //set auth persistence
+        auth.signInWithEmailAndPassword(email, password)
+        .then((userCredentrials)=>{
+            const user = userCredentrials.user;
+            AsyncStorage.setItem('userData', user.email);
+            console.log("Ban vua dang nhap voi email: ", user.email);
+        })
+        .catch((error)=> alert(error.message))
+    };
 
     return (
         <NativeBaseProvider>
@@ -81,7 +110,6 @@ function LoginScreen({ navigation }) {
                                 color="red.600"
                                 fontWeight="medium"
                                 size="xs"
-
                             >
                                 Sign in to continue!
                             </Heading>

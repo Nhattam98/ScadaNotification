@@ -4,6 +4,7 @@ import Logo from '../Screens/Image/logo.png';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { MaterialIcons } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
+import firebase from "firebase/compat/app";
 import {
     StyleSheet,
     View,
@@ -24,6 +25,7 @@ import {
     VStack,
     Box,
     Heading,
+    useToast
 } from "native-base";
 
 
@@ -32,12 +34,43 @@ function RegisterScreen({ navigation }) {
     const [password, setPassword] = useState('');
     const [conPassword, setConPassword] = useState('');
     const [show, setShow] = useState(false)
+    const toast = useToast();
     const HandleEyeClick = () => {
         setShow(!show);
     }
     const HandleOnSignUp = () => {
         console.log("Register Clicked!!!")
-    }
+        if (password === conPassword) {
+            firebase
+                .auth()
+                .createUserWithEmailAndPassword(email, password)
+                .then((userCredentials) => {
+                    const user = userCredentials.user;
+                    firebase
+                        .firestore()
+                        .collection("Users")
+                        .doc(user.email)
+                        .set({
+                            UID: user.uid,
+                            email: user.email,
+                            token: null,
+                        })
+                        .then(function () {
+                            console.log("Register Successfully with email: ", email)
+                            toast.show({
+                                bg: "green.100.800",
+                                title: "User Registered!",
+                            });
+                        });
+                })
+                .catch((error) => alert(error.message));
+        } else {
+            toast.show({
+                bg: "red.800",
+                title: "Your password does not match!",
+            });
+        }
+    };
 
     return (
         <NativeBaseProvider>
@@ -203,7 +236,7 @@ function RegisterScreen({ navigation }) {
                                         color: "warmGray.200",
                                     }}
                                 >
-                                   Already Have Account?.{" "}
+                                    Already Have Account?.{" "}
                                 </Text>
                                 <Link
                                     _text={{
