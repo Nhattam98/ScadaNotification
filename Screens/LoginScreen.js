@@ -5,6 +5,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { MaterialIcons } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import firebase from "firebase/compat/app";
+import 'firebase/compat/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
     StyleSheet,
@@ -37,19 +38,21 @@ function LoginScreen({ navigation }) {
         setShow(!show);
     };
     useEffect(() => {
-        const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
+        const unsubscribe = firebase.auth().onAuthStateChanged(function (user) {
             if (user) {
                 navigation.navigate("Main");
-                user.getIdToken().then((idToken) => {
+                user.getIdToken().then(function (idToken) {
                     firebase
                         .firestore()
                         .collection("onlineUsers")
                         .doc(firebase.auth().currentUser?.email)
                         .set({
                             email: user.email,
+                            timestamp: firebase.firestore.FieldValue.serverTimestamp()
                         });
                     return idToken;
                 });
+
             }
         });
         return unsubscribe;
@@ -60,12 +63,12 @@ function LoginScreen({ navigation }) {
         const auth = firebase.auth();
         //set auth persistence
         auth.signInWithEmailAndPassword(email, password)
-        .then((userCredentrials)=>{
-            const user = userCredentrials.user;
-            AsyncStorage.setItem('userData', user.email);
-            console.log("Ban vua dang nhap voi email: ", user.email);
-        })
-        .catch((error)=> alert(error.message))
+            .then((userCredentrials) => {
+                const user = userCredentrials.user;
+                AsyncStorage.setItem('userData', user.email);
+                console.log("Ban vua dang nhap voi email: ", user.email);
+            })
+            .catch((error) => alert(error.message))
     };
 
     return (
