@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react';
-import { ActivityIndicator, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, StyleSheet, View, LogBox } from 'react-native';
 import firebase from 'firebase/compat/app';
 import "firebase/compat/auth";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Updates from 'expo-updates';
+LogBox.ignoreLogs(["Setting a timer"]);
 export default function LoadingScreen({ navigation }) {
     const HandleAutoUpdate = async () => {
         try {
