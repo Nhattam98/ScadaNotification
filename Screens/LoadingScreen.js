@@ -23,24 +23,24 @@ export default function LoadingScreen({ navigation }) {
     };
     useEffect(() => {
 
-            HandleAutoUpdate();
-            AsyncStorage.getItem('userData').then((user_data_json) => {
-                let user = user_data_json;
-                // console.log("User:--->", user);
-                if (user) {
-                    navigation.replace('Main');
-                } else {
-                    firebase.auth().onAuthStateChanged((user) => {
-                        // console.log("user--ok------>", user);
-                        if (user) {
-                            navigation.replace('Main');
-                        } else {
-                            navigation.replace('Login');
-                        }
-                    });
-                }
-            })
-        }
+        HandleAutoUpdate();
+        AsyncStorage.getItem('userData').then((user_data_json) => {
+            let user = user_data_json;
+            // console.log("User:--->", user);
+            if (user) {
+                navigation.replace('Main');
+            } else {
+                firebase.auth().onAuthStateChanged((user) => {
+                    // console.log("user--ok------>", user);
+                    if (user) {
+                        navigation.replace('Main');
+                    } else {
+                        navigation.replace('Login');
+                    }
+                });
+            }
+        })
+    }
     );
 
     return (
