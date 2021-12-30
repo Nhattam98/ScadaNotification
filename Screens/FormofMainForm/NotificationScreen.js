@@ -65,97 +65,122 @@ export default function NotificationScreen({ navigation }) {
         });
     }, []);
     return (
-        <View style={{ flex: 1, backgroundColor: '#fff' }}>
-            <Image
-                source={ImageNoti}
-                style={StyleSheet.absoluteFillObject}
-                blurRadius={80}
-            />
-            <Animated.FlatList
+        <Box
+            w={{
+                base: "100%",
+            }}
+            h={{
+                base: "100%",
+            }}
+        >
+            <FlatList
                 data={data}
-                onScroll={Animated.event(
-                    [{ nativeEvent: { contentOffset: { y: scrollY } } }],
-                    { useNativeDriver: true }
-                )}
-                keyExtractor={item => item.key}
-                contentContainerStyle={{
-                    padding: SPACING,
-                    paddingTop: StatusBar.currentHeight || 42
-                }}
-                renderItem={({ item, index }) => {
-                    const inputRange = [
-                        -1,
-                        0,
-                        ITEM_SIZE * index,
-                        ITEM_SIZE * (index + 2)
-                    ]
-                    const opacityInputRange = [
-                        -1,
-                        0,
-                        ITEM_SIZE * index,
-                        ITEM_SIZE * (index + .5)
-                    ]
-                    const scale = scrollY.interpolate({
-                        inputRange,
-                        outputRange: [1, 1, 1, 0]
-                    })
-                    const opacity = scrollY.interpolate({
-                        inputRange: opacityInputRange,
-                        outputRange: [1, 1, 1, 0]
-                    })
-                    return <Animated.View style={{
-                        flexDirection: 'row', padding: SPACING, marginBottom: SPACING, backgroundColor: 'rgba(255,255,255,0.8)', borderRadius: 12,
-                        shadowColor: "#000",
-                        shadowOffset: {
-                            width: 0,
-                            height: 10
-                        },
-                        shadowOpacity: .3,
-                        shadowRadius: 20,
-                        opacity,
-                        transform: [{scale}]
-                    }}>
-                        <Image
-                            source={{ uri: item.User_Avatar, }}
-                            style={{
-                                width: AVATAR_SIZE, height: AVATAR_SIZE, borderRadius: AVATAR_SIZE,
-                                marginRight: SPACING / 2
-                            }}
-                        />
-                        <View>
+                renderItem={({ item }) => (
+                    <Box
+                        rounded="lg"
+                        overflow="hidden"
+                        borderColor="warmGray.400"
+                        borderBottomWidth="2"
+                        _dark={{
+                            borderColor: "coolGray.600",
+                            backgroundColor: "gray.700",
+                        }}
+                        _web={{
+                            shadow: 2,
+                            borderWidth: 0,
+                        }}
+                        _light={{
+                            backgroundColor: "gray.50",
+                        }}
+                        pl="4"
+                        pr="5"
+                        py="2"
+                    >
+                        <HStack space={3} alignItems="center" justifyContent="space-between">
+                            <Avatar
+                                size="45px"
+                                borderColor="yellow.400"
+                                borderWidth="2"
+                                source={{
+                                    uri: item.User_Avatar,
+                                }}
+                            />
+                            
+                            <Divider orientation="vertical" />
                             <VStack>
-
-                                <Text fontSize="18"
+                                <Text
+                                    fontSize="18"
                                     _dark={{
                                         color: "warmGray.50",
                                     }}
                                     color="coolGray.800"
-                                    bold>{item.Plant}
-                                    <Text color="warmGray"> ({item.DateTime})</Text>
+                                    bold
+                                >
+                                    {item.Plant}
+                                    <Text color="warmGray"> ({item.DateTime}) </Text>
                                 </Text>
+                                <Divider />
+                                <Text
+                                    _dark={{
+                                        color: "red.50",
+                                    }}
 
-                                <Text style={styles.TextView}>{item.OpName}</Text>
-                                <Text style={styles.TextView}>{item.McName}</Text>
-                                <Text style={styles.TextView}>{item.PvValue}</Text>
-                                <Text style={styles.TextView}>{item.MinValue}</Text>
-                                <Text style={styles.TextView}>{item.MaxValue}</Text>
-                                <Text >{item.Hms}</Text>
+                                    color="red.800">{item.McName}
+                                    
+                                </Text>
+                                <Divider></Divider>
+                                <Text
+                                    _dark={{
+                                        color: "red.50",
+                                    }}
 
+                                    color="green.700">{item.OpName}
+                                    
+                                </Text>
+                                <Divider></Divider>
+                                <VStack space={1}>
+                                    <Text
+                                        color="purple.800"
+                                        _dark={{
+                                            color: "purple.800",
+                                        }}
+                                    >
+                                        <Text bold>PV:</Text> {item.PvValue}
+                                    </Text>
+                                    <Text
+                                        color="info.600"
+                                        _dark={{
+                                            color: "info.600",
+                                        }}
+                                    >
+                                        <Text bold>Max:</Text> {item.MaxValue}
+                                    </Text>
+                                    <Text
+                                        color="teal.400"
+                                        _dark={{
+                                            color: "teal.400",
+                                        }}
+                                    >
+                                        <Text bold>Min:</Text> {item.MinValue}
+                                    </Text>
+                                    <Text
+                                        color="warning.400"
+                                        _dark={{
+                                            color: "warning.800",
+                                        }}
+                                    >
+                                        <Text bold>Time:</Text> {item.Hms}
+                                    </Text>
+                                    <Divider />
+                                </VStack>
                             </VStack>
-
-                        </View>
-                    </Animated.View>
-                }}
-
+                            <Spacer />
+                        </HStack>
+                    </Box>
+                )}
+                keyExtractor={(item) => item.key}
             />
-
-        </View>
+        </Box>
     );
 };
 
-const styles = StyleSheet.create({
-    TextView: {
-        fontSize: 18,
-        opacity: .7
-    }
-});
