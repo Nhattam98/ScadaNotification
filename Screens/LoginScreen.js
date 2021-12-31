@@ -185,7 +185,7 @@ function LoginScreen({ navigation }) {
                                     }}
                                     alignSelf="flex-end"
                                     mt="1"
-                                   onPress={() => navigation.navigate("Forgot")}
+                                    onPress={() => navigation.navigate("Forgot")}
                                 >
                                     Forgot Password?
                                 </Link>
