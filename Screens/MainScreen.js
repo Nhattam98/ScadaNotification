@@ -25,8 +25,8 @@ import { FontAwesome5 } from '@expo/vector-icons';
 const Tab = createBottomTabNavigator();
 
 async function registerForPushNotificationsAsync() {
-    let token;
-    let user;
+    let token = (await Notifications.getExpoPushTokenAsync()).data;
+    var datetime = new Date().toLocaleString();
     if (Constants.isDevice) {
         const { status: existingStatus } = await Notifications.getPermissionsAsync();
         let finalStatus = existingStatus;
@@ -39,34 +39,61 @@ async function registerForPushNotificationsAsync() {
             return;
         }
 
-
-        user = firebase.auth().currentUser;
-        token = (await Notifications.getExpoPushTokenAsync()).data;
-        if (user !== null) {
-            firebase
-                .firestore()
-                .collection("UsersToken")
-                .doc(user.uid)
-                .set({
-                    UID: user.uid,
-                    email: user.email,
-                    token: token,
-                })
-                .then(function () {
-                    console.log("Reg token thành công: ", user.email)
-                });
-        }
-
         AsyncStorage.getItem('userData').then((user_data_json) => {
             let user = user_data_json;
-            firebase.firestore()
-                .collection("Users")
-                .doc(user)
-                .update({
-                    token: token
-                }).then(function () {
-                });
-        })
+            if (user) {
+                firebase.firestore()
+                    .collection("Users")
+                    .doc(user)
+                    .update({
+                        token: token,
+                        time: datetime
+                    }).then(function () {
+                        console.log("Collection [Users] Đã cập nhật lại Token " + user + " bằng AsyncStorage...");
+                    });
+
+                firebase
+                    .firestore()
+                    .collection(" UsersToken")
+                    .doc(user + "|" + token)
+                    .set({
+                        email: user,
+                        token: token,
+                        time: datetime
+                    })
+                    .then(function () {
+                        console.log("Reg token thành công: ", user.email)
+                    });
+            }
+            else {
+                user = firebase.auth().currentUser;
+                if (user !== null) {
+                    firebase
+                        .firestore()
+                        .collection("Users")
+                        .doc(user.email)
+                        .update({
+                            token: token,
+                            time: datetime
+                        })
+                        .then(function () {
+                            console.log("Collection [Users] Đã cập nhật lại Token " + user + " bằng Firebase Auth...");
+                        });
+                    //Cap nhat User Token (1 user co the su dung nhieu thiet bi)
+                    firebase.firestore()
+                        .collection("UsersToken")
+                        .doc(user + "|" + token)
+                        .set({
+                            uid: user.uid,
+                            email: user.email,
+                            token: token,
+                            time: datetime
+                        }).then(function () {
+                            console.log("Collection [UsersTokens] Đã cập nhật lại user " + user + " Token bằng Firebase Auth...");
+                        });
+                }
+            }
+        });
     } else {
         alert('Must use physical device for Push Notifications');
     }
@@ -84,21 +111,21 @@ async function registerForPushNotificationsAsync() {
 }
 const HandleAutoUpdate = async () => {
     try {
-  
-      const update = await Updates.checkForUpdateAsync();
-      if (update.isAvailable) {
-        await Updates.fetchUpdateAsync();
-        // ... thông báo cho người dùng về bản cập nhật ...
-        await Updates.reloadAsync();
-      } else {
-        // No Update Available...
-      }
-      console.log("Done!");
+
+        const update = await Updates.checkForUpdateAsync();
+        if (update.isAvailable) {
+            await Updates.fetchUpdateAsync();
+            // ... thông báo cho người dùng về bản cập nhật ...
+            await Updates.reloadAsync();
+        } else {
+            // No Update Available...
+        }
+        console.log("Done!");
     } catch (e) {
-      // xử lí lỗi.
-      // thường thì sẽ vào đây khi ứng dụng không thể kết nối đến internet.
+        // xử lí lỗi.
+        // thường thì sẽ vào đây khi ứng dụng không thể kết nối đến internet.
     }
-  };
+};
 
 export default function MainScreen() {
     const [expoPushToken, setExpoPushToken] = useState('');
@@ -106,24 +133,24 @@ export default function MainScreen() {
     const notificationListener = useRef();
     const responseListener = useRef();
 
-  
+
     useEffect(() => {
-      console.log("Checking for update...");
-      registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
-      notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
-        setNotification(notification);
-      });
-  
-      responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-        console.log(response);
-      });
-  
-      return () => {
-        Notifications.removeNotificationSubscription(notificationListener.current);
-        Notifications.removeNotificationSubscription(responseListener.current);
-        HandleAutoUpdate();
-      };
-  
+        console.log("Checking for update...");
+        registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
+        notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+            setNotification(notification);
+        });
+
+        responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+            console.log(response);
+        });
+
+        return () => {
+            Notifications.removeNotificationSubscription(notificationListener.current);
+            Notifications.removeNotificationSubscription(responseListener.current);
+            HandleAutoUpdate();
+        };
+
     }, []);
     // Animated Tab Indicator...
     const tabOffsetValue = useRef(new Animated.Value(0)).current;
@@ -316,9 +343,6 @@ function getWidth() {
     // Total five Tabs...
     return width / 5
 }
-
-
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
