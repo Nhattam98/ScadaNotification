@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Background from '../Screens/Image/Background.jpg';
 import Logo from '../Screens/Image/logo.png';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { MaterialIcons } from "@expo/vector-icons";
-import { Ionicons } from "@expo/vector-icons";
+import { MaterialCommunityIcons, MaterialIcons, Ionicons } from '@expo/vector-icons';
 import firebase from "firebase/compat/app";
 import 'firebase/compat/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';

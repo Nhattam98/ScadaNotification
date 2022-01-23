@@ -14,7 +14,6 @@ import SearchScreen from './FormofMainForm/SearchScreen';
 import NotificationScreen from './FormofMainForm/NotificationScreen';
 import ProfileScreen from './FormofMainForm/ProfileScreen';
 import QRScreen from './FormofMainForm/QRScreen';
-
 //Image QR
 import qr from '../assets/QR.png';
 // Font Awesome Icons...
