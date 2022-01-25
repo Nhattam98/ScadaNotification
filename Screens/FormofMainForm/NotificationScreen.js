@@ -29,7 +29,10 @@ export default function NotificationScreen({ navigation }) {
         const data = [];
         try {
             AsyncStorage.getItem('userData').then((user_data_json) => {
-                let user = user_data_json;
+                let user =
+                    firebase.auth().currentUser?.email == null
+                        ? user_data_json
+                        : firebase.auth().currentUser?.email;
                 console.log("user: ", user);
                 firebase
                     .firestore()
@@ -58,9 +61,6 @@ export default function NotificationScreen({ navigation }) {
         loadData();
         setRefreshing(false);
     };
-
-
-
     useEffect(() => {
         const unsubscribe = navigation.addListener("focus", () => {
             loadData();
@@ -193,6 +193,7 @@ export default function NotificationScreen({ navigation }) {
                     data={data}
                     renderItem={_renderItem}
                     keyExtractor={(item) => item.ORD}
+                    mb={90}
                 />
                 <Loader isLoading={isLoading} />
             </Box>

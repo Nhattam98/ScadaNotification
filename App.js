@@ -18,7 +18,7 @@ const AppBar = () => {
   return (
     <>
       <StatusBar backgroundColor="transparent" barStyle="dark-content" />
-      <Box safeAreaTop/>
+      <Box safeAreaTop />
       <HStack px="5" py="3">
         <Text color="tertiary.600" fontSize="18" fontWeight="bold">Scada Notification Resource</Text>
       </HStack>

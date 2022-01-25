@@ -10,7 +10,7 @@ import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 //Import Screen of Main Screen
 import HomeScreen from './FormofMainForm/HomeScreen';
-import SearchScreen from './FormofMainForm/SearchScreen';
+import ChatScreen from './FormofMainForm/ChatScreen';
 import NotificationScreen from './FormofMainForm/NotificationScreen';
 import ProfileScreen from './FormofMainForm/ProfileScreen';
 import QRScreen from './FormofMainForm/QRScreen';
@@ -182,7 +182,7 @@ export default function MainScreen() {
 
                     // Tab ICons....
                 }
-                <Tab.Screen name={"Home"} component={HomeScreen} options={{
+                {/* <Tab.Screen name={"Home"} component={HomeScreen} options={{
                     headerShown: false,
                     tabBarIcon: ({ focused }) => (
                         <View style={{
@@ -207,7 +207,7 @@ export default function MainScreen() {
                     }
                 })}></Tab.Screen>
 
-                <Tab.Screen name={"Search"} component={SearchScreen} options={{
+                <Tab.Screen name={"Chat"} component={ChatScreen} options={{
                     headerShown: false,
                     tabBarIcon: ({ focused }) => (
                         <View style={{
@@ -216,7 +216,7 @@ export default function MainScreen() {
                             top: 20
                         }}>
                             <FontAwesome5
-                                name="search"
+                                name="comments"
                                 size={20}
                                 color={focused ? 'red' : 'gray'}
                             ></FontAwesome5>
@@ -230,14 +230,14 @@ export default function MainScreen() {
                             useNativeDriver: true,
                         }).start();
                     }
-                })}></Tab.Screen>
+                })}></Tab.Screen> */}
 
-                {
+                {/* {
 
                     // Extra Tab Screen For Action Button..
-                }
+                } */}
 
-                <Tab.Screen name={"ActionButton"} component={QRScreen} options={{
+                {/* <Tab.Screen name={"ActionButton"} component={QRScreen} options={{
                     headerShown: false,
                     tabBarIcon: ({ focused }) => (
 
@@ -262,7 +262,7 @@ export default function MainScreen() {
                             </View>
                         </TouchableOpacity>
                     )
-                }}></Tab.Screen>
+                }}></Tab.Screen> */}
 
                 <Tab.Screen name={"Notifications"} component={NotificationScreen} options={{
                     headerShown: false,
@@ -316,7 +316,7 @@ export default function MainScreen() {
 
             </Tab.Navigator>
 
-            <Animated.View style={{
+            {/* <Animated.View style={{
                 width: getWidth() - 20,
                 height: 2,
                 backgroundColor: 'red',
@@ -330,7 +330,7 @@ export default function MainScreen() {
                 ]
             }}>
 
-            </Animated.View>
+            </Animated.View> */}
         </NativeBaseProvider>
     );
 }

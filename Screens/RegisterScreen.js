@@ -57,7 +57,7 @@ function RegisterScreen({ navigation }) {
                         .then(function () {
                             console.log("Register Successfully with email: ", email)
                             toast.show({
-                                bg: "green.100.800",
+                                bg: "green.800",
                                 title: "User Registered!",
                             });
                         });
