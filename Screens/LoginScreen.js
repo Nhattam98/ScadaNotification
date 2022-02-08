@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Background from '../Screens/Image/Background.jpg';
-import Logo from '../Screens/Image/logo.png';
+import Logo from '../Screens/Image/logo.jpg';
 import { MaterialCommunityIcons, MaterialIcons, Ionicons } from '@expo/vector-icons';
 import firebase from "firebase/compat/app";
 import 'firebase/compat/firestore';
@@ -24,10 +24,37 @@ import {
     Link,
     VStack,
     Heading,
-    Box
+    Box,
+    Alert,
+    Center,
 } from "native-base";
 
+function Example() {
+    return <Center>
+        <VStack space={5} maxW="400">
+            <Alert w="100%" status="info">
+                <VStack space={1} flexShrink={1} w="100%" alignItems="center">
+                    <Alert.Icon size="md" />
+                    <Text fontSize="md" fontWeight="medium" _dark={{
+                        color: "coolGray.800"
+                    }}>
+                        Registration User Guide!
+                    </Text>
 
+                    <Box _text={{
+                        textAlign: "center"
+                    }} _dark={{
+                        _text: {
+                            color: "coolGray.600"
+                        }
+                    }}>
+                        To start the application process, you will need to create an account. Please click Sign Up to execute.
+                    </Box>
+                </VStack>
+            </Alert>
+        </VStack>
+    </Center>;
+}
 function LoginScreen({ navigation }) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -46,7 +73,6 @@ function LoginScreen({ navigation }) {
                         .doc(firebase.auth().currentUser?.email)
                         .set({
                             email: user.email,
-                            timestamp: firebase.firestore.FieldValue.serverTimestamp()
                         });
                     return idToken;
                 });
@@ -93,6 +119,7 @@ function LoginScreen({ navigation }) {
                 <View style={styles.bottomView}>
                     <Box safeArea flex={1} p="2" py="10" w="90%" mx="auto">
                         <VStack space={3}>
+
                             <Heading
                                 size="lg"
                                 fontWeight="600"
@@ -133,7 +160,7 @@ function LoginScreen({ navigation }) {
                                             ml="2"
                                             color="muted.400"
                                         />}
-                                    placeholder="Nhập địa chỉ email"
+                                    placeholder="Email address"
                                     value={email}
                                     onChangeText={setEmail}
                                 />
@@ -158,7 +185,7 @@ function LoginScreen({ navigation }) {
                                             color="muted.400"
                                         />}
                                     type={show ? "text" : "password"}
-                                    placeholder="Nhập mật khẩu"
+                                    placeholder="Password"
                                     value={password}
                                     onChangeText={setPassword}
                                     InputRightElement={
@@ -185,7 +212,7 @@ function LoginScreen({ navigation }) {
                                     mt="1"
                                     onPress={() => navigation.navigate("Forgot")}
                                 >
-                                    Forgot Password?
+                                    Forget Password?
                                 </Link>
                             </FormControl>
                             <Button
@@ -213,12 +240,14 @@ function LoginScreen({ navigation }) {
                                         color: "blue.500",
                                         fontWeight: "bold",
                                         fontSize: "sm",
+                                        mt: "-0.5"
                                     }}
                                     onPress={() => navigation.navigate('Register')}
                                 >
                                     Sign Up
                                 </Link>
                             </HStack>
+                            <Example />
                         </VStack>
                     </Box>
                 </View>

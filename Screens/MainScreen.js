@@ -139,18 +139,16 @@ export default function MainScreen() {
         notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
             setNotification(notification);
         });
-
         responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
             console.log(response);
         });
-
         return () => {
             Notifications.removeNotificationSubscription(notificationListener.current);
             Notifications.removeNotificationSubscription(responseListener.current);
             HandleAutoUpdate();
         };
-
     }, []);
+
     // Animated Tab Indicator...
     const tabOffsetValue = useRef(new Animated.Value(0)).current;
     return (

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Background from '../Screens/Image/Background.jpg';
-import Logo from '../Screens/Image/logo.png';
+import Logo from '../Screens/Image/logo.jpg';
 import { MaterialCommunityIcons, MaterialIcons, Ionicons } from '@expo/vector-icons';
 import firebase from "firebase/compat/app";
 import "firebase/compat/firestore";
@@ -136,7 +136,7 @@ function RegisterScreen({ navigation }) {
                                             ml="2"
                                             color="muted.400"
                                         />}
-                                    placeholder="Nhập địa chỉ email"
+                                    placeholder="Email address"
                                     value={email}
                                     onChangeText={setEmail}
                                 />
@@ -161,7 +161,7 @@ function RegisterScreen({ navigation }) {
                                             color="muted.400"
                                         />}
                                     type={show ? "text" : "password"}
-                                    placeholder="Nhập mật khẩu"
+                                    placeholder="Password"
                                     value={password}
                                     onChangeText={setPassword}
                                     InputRightElement={
@@ -199,7 +199,7 @@ function RegisterScreen({ navigation }) {
                                             color="muted.400"
                                         />}
                                     type={show ? "text" : "password"}
-                                    placeholder="Nhập lại mật khẩu"
+                                    placeholder="Confirm Password"
                                     value={conPassword}
                                     onChangeText={setConPassword}
                                     InputRightElement={
@@ -242,6 +242,7 @@ function RegisterScreen({ navigation }) {
                                         color: "blue.500",
                                         fontWeight: "bold",
                                         fontSize: "sm",
+                                        mt: "-0.5"
                                     }}
                                     onPress={() => navigation.navigate('Login')}
                                 >

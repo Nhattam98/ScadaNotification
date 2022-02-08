@@ -105,7 +105,7 @@ const ProfileScreen = ({ navigation }) => {
         }}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <ScrollView>
-            <VStack mt={10}>
+            <VStack>
               <Center py="2">
                 <Box
                   maxW="100%"
