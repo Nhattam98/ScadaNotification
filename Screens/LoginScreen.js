@@ -11,8 +11,11 @@ import {
     Text,
     ImageBackground,
     Dimensions,
-    ScrollView,
     Image,
+    Keyboard,
+    TouchableWithoutFeedback,
+    ScrollView,
+    Platform
 } from 'react-native';
 import {
     NativeBaseProvider,
@@ -27,6 +30,7 @@ import {
     Box,
     Alert,
     Center,
+    KeyboardAvoidingView,
 } from "native-base";
 
 function Example() {
@@ -86,7 +90,7 @@ function LoginScreen({ navigation }) {
         console.log("Log in Clicked!!!")
         const auth = firebase.auth();
         //set auth persistence
-        auth.signInWithEmailAndPassword(email, password)
+        auth.signInWithEmailAndPassword(email.trim(), password)
             .then((userCredentrials) => {
                 const user = userCredentrials.user;
                 AsyncStorage.setItem('userData', user.email);
@@ -97,161 +101,166 @@ function LoginScreen({ navigation }) {
 
     return (
         <NativeBaseProvider>
-            <ScrollView style={{ flex: 1, backgroundColor: '#ffffff' }}
-                showsVerticalScrollIndicator={false}>
-                <ImageBackground
-                    source={Background}
-                    style={{
-                        height: Dimensions.get('window').height / 3.5
-                    }}
-                >
-                    <View style={styles.brandView}>
-                        <Image
-                            style={{ width: 80, height: 80 }}
-                            source={Logo}
-                            borderRadius={100}
-                            alt="Logo"
-                        />
-                        <Text style={styles.brandViewText}>Scada</Text>
-                    </View>
-                </ImageBackground>
-                {/* Bottom View */}
-                <View style={styles.bottomView}>
-                    <Box safeArea flex={1} p="2" py="10" w="90%" mx="auto">
-                        <VStack space={3}>
-
-                            <Heading
-                                size="lg"
-                                fontWeight="600"
-                                color="coolGray.800"
-                                _dark={{
-                                    color: "warmGray.50",
-                                }}
-                            >
-                                Welcome
-                            </Heading>
-                            <Heading
-                                mt="1"
-                                _dark={{
-                                    color: "warmGray.200",
-                                }}
-                                color="red.600"
-                                fontWeight="medium"
-                                size="xs"
-                            >
-                                Sign in to continue!
-                            </Heading>
-                            {/* Form Input View */}
-                            <FormControl>
-                                <FormControl.Label
-                                    _text={{
-                                        color: "coolGray.800",
-                                        fontSize: "xs",
-                                        fontWeight: 500,
-                                    }}
-                                >
-                                    E-Mail
-                                </FormControl.Label>
-                                <Input
-                                    InputLeftElement={
-                                        <Icon
-                                            as={<MaterialIcons name="email" />}
-                                            size={5}
-                                            ml="2"
-                                            color="muted.400"
-                                        />}
-                                    placeholder="Email address"
-                                    value={email}
-                                    onChangeText={setEmail}
+            <KeyboardAvoidingView
+                behavior={Platform.OS === 'ios' ? "position" : undefined}
+                style={{ flex: 1, backgroundColor: '#ffffff' }}
+                showsVerticalScrollIndicator={false}
+            >
+                <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                    <ScrollView>
+                        <ImageBackground
+                            source={Background}
+                            style={{height: Dimensions.get('window').height / 3.5}}
+                        >
+                            <View style={styles.brandView}>
+                                <Image
+                                    style={{ width: 80, height: 80 }}
+                                    source={Logo}
+                                    borderRadius={100}
+                                    alt="Logo"
                                 />
-                            </FormControl>
-                            {/* Password */}
-                            <FormControl>
-                                <FormControl.Label
-                                    _text={{
-                                        color: "coolGray.800",
-                                        fontSize: "xs",
-                                        fontWeight: 500,
-                                    }}
-                                >
-                                    Password
-                                </FormControl.Label>
-                                <Input
-                                    InputLeftElement={
-                                        <Icon
-                                            as={<MaterialCommunityIcons name="form-textbox-password" />}
-                                            size={5}
-                                            ml="2"
-                                            color="muted.400"
-                                        />}
-                                    type={show ? "text" : "password"}
-                                    placeholder="Password"
-                                    value={password}
-                                    onChangeText={setPassword}
-                                    InputRightElement={
-                                        <Icon
-                                            as={
-                                                <MaterialIcons
-                                                    name={show ? "visibility" : "visibility-off"}
+                                <Text style={styles.brandViewText}>Scada</Text>
+                            </View>
+                        </ImageBackground>
+                        {/* Bottom View */}
+                        <View style={styles.bottomView}>
+                            <Box safeArea flex={1} p="2" py="10" w="90%" mx="auto">
+                                <VStack space={3}>
+
+                                    <Heading
+                                        size="lg"
+                                        fontWeight="600"
+                                        color="coolGray.800"
+                                        _dark={{
+                                            color: "warmGray.50",
+                                        }}
+                                    >
+                                        Welcome
+                                    </Heading>
+                                    <Heading
+                                        mt="1"
+                                        _dark={{
+                                            color: "warmGray.200",
+                                        }}
+                                        color="red.600"
+                                        fontWeight="medium"
+                                        size="xs"
+                                    >
+                                        Sign in to continue!
+                                    </Heading>
+                                    {/* Form Input View */}
+                                    <FormControl>
+                                        <FormControl.Label
+                                            _text={{
+                                                color: "coolGray.800",
+                                                fontSize: "xs",
+                                                fontWeight: 500,
+                                            }}
+                                        >
+                                            E-Mail
+                                        </FormControl.Label>
+                                        <Input
+                                            InputLeftElement={
+                                                <Icon
+                                                    as={<MaterialIcons name="email" />}
+                                                    size={5}
+                                                    ml="2"
+                                                    color="muted.400"
+                                                />}
+                                            placeholder="Email address"
+                                            value={email}
+                                            onChangeText={setEmail}
+                                        />
+                                    </FormControl>
+                                    {/* Password */}
+                                    <FormControl>
+                                        <FormControl.Label
+                                            _text={{
+                                                color: "coolGray.800",
+                                                fontSize: "xs",
+                                                fontWeight: 500,
+                                            }}
+                                        >
+                                            Password
+                                        </FormControl.Label>
+                                        <Input
+                                            InputLeftElement={
+                                                <Icon
+                                                    as={<MaterialCommunityIcons name="form-textbox-password" />}
+                                                    size={5}
+                                                    ml="2"
+                                                    color="muted.400"
+                                                />}
+                                            type={show ? "text" : "password"}
+                                            placeholder="Password"
+                                            value={password.trim()}
+                                            onChangeText={setPassword}
+                                            InputRightElement={
+                                                <Icon
+                                                    as={
+                                                        <MaterialIcons
+                                                            name={show ? "visibility" : "visibility-off"}
+                                                        />
+                                                    }
+                                                    size={5}
+                                                    mr="2"
+                                                    color={show ? "black" : "muted.400"}
+                                                    onPress={HandleEyeClick}
                                                 />
                                             }
-                                            size={5}
-                                            mr="2"
-                                            color={show ? "black" : "muted.400"}
-                                            onPress={HandleEyeClick}
                                         />
-                                    }
-                                />
-                                <Link
-                                    _text={{
-                                        fontSize: "xs",
-                                        fontWeight: "500",
-                                        color: "red.500",
-                                    }}
-                                    alignSelf="flex-end"
-                                    mt="1"
-                                    onPress={() => navigation.navigate("Forgot")}
-                                >
-                                    Forget Password?
-                                </Link>
-                            </FormControl>
-                            <Button
-                                endIcon={<Icon as={Ionicons} name="enter-outline" size="sm" />}
-                                w="100%"
-                                mt="2"
-                                colorScheme="indigo"
-                                _text={{ color: "white" }}
-                                onPress={HandleOnLogin}
-                            >
-                                Sign In
-                            </Button>
-                            <HStack mt="6" justifyContent="center">
-                                <Text
-                                    fontSize="sm"
-                                    color="coolGray.600"
-                                    _dark={{
-                                        color: "warmGray.200",
-                                    }}
-                                >
-                                    I'm a new user.{" "}
-                                </Text>
-                                <Link
-                                    _text={{
-                                        color: "blue.500",
-                                        fontWeight: "bold",
-                                        fontSize: "sm",
-                                        mt: "-0.5"
-                                    }}
-                                    onPress={() => navigation.navigate('Register')}
-                                >
-                                    Sign Up
-                                </Link>
-                            </HStack>
-                            <Example />
-                        </VStack>
-                    </Box>
-                </View>
-            </ScrollView>
+                                        <Link
+                                            _text={{
+                                                fontSize: "xs",
+                                                fontWeight: "500",
+                                                color: "red.500",
+                                            }}
+                                            alignSelf="flex-end"
+                                            mt="1"
+                                            onPress={() => navigation.navigate("Forgot")}
+                                        >
+                                            Forget Password?
+                                        </Link>
+                                    </FormControl>
+                                    <Button
+                                        endIcon={<Icon as={Ionicons} name="enter-outline" size="sm" />}
+                                        w="100%"
+                                        mt="2"
+                                        colorScheme="indigo"
+                                        _text={{ color: "white" }}
+                                        onPress={HandleOnLogin}
+                                    >
+                                        Sign In
+                                    </Button>
+                                    <HStack mt="6" justifyContent="center">
+                                        <Text
+                                            fontSize="sm"
+                                            color="coolGray.600"
+                                            _dark={{
+                                                color: "warmGray.200",
+                                            }}
+                                        >
+                                            I'm a new user.{" "}
+                                        </Text>
+                                        <Link
+                                            _text={{
+                                                color: "blue.500",
+                                                fontWeight: "bold",
+                                                fontSize: "sm",
+                                                mt: "-0.5"
+                                            }}
+                                            onPress={() => navigation.navigate('Register')}
+                                        >
+                                            Sign Up
+                                        </Link>
+                                    </HStack>
+                                    {/* <Example /> */}
+                                </VStack>
+                            </Box>
+                        </View>
+                    </ScrollView>
+                </TouchableWithoutFeedback>
+            </KeyboardAvoidingView>
         </NativeBaseProvider >
     );
 }

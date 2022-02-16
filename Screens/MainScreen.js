@@ -61,7 +61,11 @@ async function registerForPushNotificationsAsync() {
                         time: datetime
                     })
                     .then(function () {
-                        console.log("Reg token thành công: ", user.email)
+                        console.log(
+                            "Collection [UsersTokens] Đã cập nhật lại user " +
+                            user +
+                            " Token bằng AsyncStorage..."
+                        );
                     });
             }
             else {
